@@ -92,16 +92,43 @@ public class CucumberPosSteps {
     }
 
     // TODO: Add Given step for new scenario
+    @Given("the following POS exist")
+    public void theFollowingPosExist(List<PosDto> posList) {
+            createdPosList = createPos(posList);
+            assertThat(createdPosList).size().isEqualTo(posList.size());
+    }
+
 
     // When -----------------------------------------------------------------------
 
     @When("I insert POS with the following elements")
-    public void insertPosWithTheFollowingValues(List<PosDto> posList) {
-        createdPosList = createPos(posList);
-        assertThat(createdPosList).size().isEqualTo(posList.size());
-    }
+    public void iInsertPosWithTheFollowingElements(List<PosDto> posList) {
+    createdPosList = createPos(posList);
+    assertThat(createdPosList).size().isEqualTo(posList.size());
+}
 
-    // TODO: Add When step for new scenario
+
+    @When("I update the description of {string} to {string}")
+public void iUpdateTheDescriptionOfTo(String name, String newDescription) {
+
+    PosDto pos = retrievePosByName(name);
+
+    PosDto updated = PosDto.builder()
+            .id(pos.id())
+            .name(pos.name())
+            .description(newDescription)
+            .type(pos.type())
+            .campus(pos.campus())
+            .street(pos.street())
+            .houseNumber(pos.houseNumber())
+            .postalCode(pos.postalCode())
+            .city(pos.city())
+            .build();
+
+    updatedPos = updatePos(List.of(updated)).get(0);
+}
+
+
 
     // Then -----------------------------------------------------------------------
 
@@ -114,4 +141,12 @@ public class CucumberPosSteps {
     }
 
     // TODO: Add Then step for new scenario
+    @Then("the POS {string} should have the description {string}")
+    public void thePosShouldHaveTheDescription(String name, String expectedDescription) {
+
+    PosDto pos = retrievePosByName(name);
+    assertThat(pos.description()).isEqualTo(expectedDescription);
+    }
+
+
 }
